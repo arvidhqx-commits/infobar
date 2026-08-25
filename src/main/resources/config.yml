@@ -1,0 +1,31 @@
+# InfoBar configuration
+# Named boss bars, shown to every eligible player (permission infobar.see, default true).
+# Players can hide all bars for themselves with /infobar; admins reload with /infobar reload.
+#
+# Per bar:
+#   enabled                  true/false
+#   text                     MiniMessage (<red>...) or legacy (&c...) text.
+#                             Placeholders: {player} {online} {max} {tps} {world} {time}
+#   frames                   optional list of texts; if non-empty, rotates through them
+#                             instead of the static "text" field, one frame per update.
+#   color                    PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+#   overlay                  PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20
+#   progress                 0.0-1.0, or "time" for the current day's time-of-day progress
+#   update-interval-seconds  how often text/progress are recomputed
+bars:
+  server:
+    enabled: true
+    text: '&6Welcome! &7Online: &f{online}&7/&f{max} &8| &7TPS: &f{tps}'
+    frames: []
+    color: YELLOW
+    overlay: PROGRESS
+    progress: 1.0
+    update-interval-seconds: 5
+  daytime:
+    enabled: false
+    text: '&bTime: &f{time}'
+    frames: []
+    color: BLUE
+    overlay: NOTCHED_10
+    progress: 'time'
+    update-interval-seconds: 5

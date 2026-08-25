@@ -1,0 +1,13 @@
+name: InfoBar
+version: '${version}'
+main: dev.infobar.InfobarPlugin
+api-version: '1.21'
+description: Persistent, animated boss bars - server info, playtime, TPS, or any text at the top of the screen.
+commands:
+  infobar:
+    description: Toggle boss bars for yourself, or reload the config
+permissions:
+  infobar.see:
+    default: true
+  infobar.admin:
+    default: op
