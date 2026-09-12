@@ -2,12 +2,16 @@
 # Named boss bars, shown to every eligible player (permission infobar.see, default true).
 # Players can hide all bars for themselves with /infobar; admins reload with /infobar reload.
 #
+# Bar names are free text (a dot in the name is fine). Delete a bar or set enabled: false
+# to remove it - nothing from the built-in example config is used underneath your file.
+#
 # Per bar:
 #   enabled                  true/false
 #   text                     MiniMessage (<red>...) or legacy (&c...) text.
 #                             Placeholders: {player} {online} {max} {tps} {world} {time}
 #   frames                   optional list of texts; if non-empty, rotates through them
 #                             instead of the static "text" field, one frame per update.
+#                             A single text (not a list) counts as a one-frame list.
 #   color                    PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
 #   overlay                  PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20
 #   progress                 0.0-1.0, or "time" for the current day's time-of-day progress

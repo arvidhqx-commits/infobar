@@ -63,19 +63,39 @@ public final class InfobarPlugin extends JavaPlugin implements Listener {
         for (Player player : getServer().getOnlinePlayers()) hideAllBars(player);
     }
 
+    /**
+     * Bukkit reads '.' as a path separator: a bar named "my.bar" silently became a
+     * nested section and showed up as an EMPTY bar called "my" (found 12.09.2026).
+     * A separator that cannot occur in a name switches that off. It must be set
+     * BEFORE loading - loadConfiguration()/getConfig() already build the tree.
+     */
+    private static final char SEP = '\u0001';
+
     private void loadBars() {
-        reloadConfig();
         bars.clear();
-        ConfigurationSection root = getConfig().getConfigurationSection("bars");
+        YamlConfiguration yml = new YamlConfiguration();
+        yml.options().pathSeparator(SEP);
+        try {
+            yml.load(new File(getDataFolder(), "config.yml"));
+        } catch (IOException | org.bukkit.configuration.InvalidConfigurationException e) {
+            getLogger().warning("Could not read config.yml, no bars loaded: " + e.getMessage());
+            return;
+        }
+        ConfigurationSection root = yml.getConfigurationSection("bars");
         if (root == null) return;
-        for (String id : root.getKeys(false)) {
-            ConfigurationSection s = root.getConfigurationSection(id);
-            if (s == null) continue;
+        for (Map.Entry<String, Object> entry : root.getValues(false).entrySet()) {
+            String id = entry.getKey();
+            if (!(entry.getValue() instanceof ConfigurationSection s)) {
+                getLogger().warning("Bar '" + id + "' is not a section (expected text/color/... below it) - skipped.");
+                continue;
+            }
             Bar bar = new Bar();
             bar.id = id;
             bar.enabled = s.getBoolean("enabled", true);
             bar.text = s.getString("text", "");
-            bar.frames = s.getStringList("frames");
+            // 'frames: single text' is a common YAML slip; treat it as a one-entry list
+            // instead of silently falling back to 'text' (12.09.2026).
+            bar.frames = s.isString("frames") ? List.of(s.getString("frames")) : s.getStringList("frames");
             try {
                 bar.color = BossBar.Color.valueOf(s.getString("color", "WHITE").toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
